@@ -132,15 +132,16 @@ def video_verification():
     cap = cv2.VideoCapture(0)
     while True:
         grab, compared_img = cap.read()
-        cv2.imshow('Compared image', compared_img)
         # уменьшение размера фото, чтобы сеть могла его обработать
         compared_img = cv2.resize(compared_img.copy(), (160, 160))
+        compared_img_copy = compared_img.copy()
         # увеличение размерности фото
         compared_img = np.expand_dims(compared_img, axis=0)
         print("Verifying two images...")
         # сравнение исходного фото с кадром с камеры
         ver_result = DeepFace.verify(original_img, compared_img, distance_metric='euclidean', model_name='Facenet',
                                      detector_backend='ssd')
+        cv2.imshow('Compared image', compared_img_copy)
         # вывод результата
         verified = bool(ver_result['verified'])
         if not verified:
